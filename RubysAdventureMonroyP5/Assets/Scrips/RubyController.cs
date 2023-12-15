@@ -8,7 +8,7 @@ public class RubyController : MonoBehaviour
     public float speed = 3.0f;
 
     public int maxHealth = 5;
-    public float timeInvincible = 2;
+    public float timeInvincible = 2.0f;
    public int health { get { return currentHealth; } }
     int currentHealth;
 
@@ -41,6 +41,15 @@ public class RubyController : MonoBehaviour
 
         Vector2 move = new Vector2(horizontal, vertical);
 
+        if(!Mathf.Approximately(move.x, 0.0f) || !Mathf.Approximately(move.y, 0.0f))
+        {
+            lookDirection.Set(move.x, move.y);
+            lookDirection.Normalize();
+        }
+        animator.SetFloat("Look X", lookDirection.x);
+        animator.SetFloat("Look Y", lookDirection.y);
+        animator.SetFloat("Speed", move.magnitude); 
+
         if(isInvincible)
         {
          invincibleTimer -= Time.deltaTime;
@@ -63,6 +72,8 @@ public class RubyController : MonoBehaviour
     {
         if (amount < 0)
         {
+            animator.SetTrigger("Hit");
+
             if(isInvincible)
             {
                 return;
